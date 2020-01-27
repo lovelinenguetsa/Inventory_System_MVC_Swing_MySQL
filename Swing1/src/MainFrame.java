@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -23,6 +24,7 @@ public class MainFrame extends JFrame {
 	private JButton btn;
 	private Toolbar tb;
 	private FormPanel fP;
+	private JFileChooser filechooser;
 
 	public MainFrame() {
 
@@ -36,6 +38,7 @@ public class MainFrame extends JFrame {
 		btn = new JButton("click me");
 		tb = new Toolbar();
 		fP = new FormPanel();
+		filechooser= new JFileChooser();
 		tb.setStringListener(new StringListener() {
 
 			@Override
@@ -105,6 +108,28 @@ public class MainFrame extends JFrame {
 		fileMenu.setMnemonic(KeyEvent.VK_F);
 		exit.setMnemonic(KeyEvent.VK_X);
 		exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+		
+		importData.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (filechooser.showOpenDialog(MainFrame.this)== JFileChooser.APPROVE_OPTION) {
+					System.out.println(filechooser.getSelectedFile());
+				};
+				
+			}
+		});
+		
+exportData.addActionListener( new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (filechooser.showOpenDialog(MainFrame.this)== JFileChooser.APPROVE_OPTION) {
+					System.out.println(filechooser.getSelectedFile());
+				};
+				
+			}
+		});
 
 		exit.addActionListener(new ActionListener() {
 
