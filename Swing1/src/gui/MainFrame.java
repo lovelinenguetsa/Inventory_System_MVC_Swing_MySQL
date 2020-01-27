@@ -1,7 +1,10 @@
+package gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -14,10 +17,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileFilter;
 
 import org.w3c.dom.events.Event;
 
-import com.sun.glass.events.KeyEvent;
+import controler.Controller;
+
+
 
 public class MainFrame extends JFrame {
 	private TextPanel textpanel;
@@ -25,6 +31,9 @@ public class MainFrame extends JFrame {
 	private Toolbar tb;
 	private FormPanel fP;
 	private JFileChooser filechooser;
+	private Controller controller;
+	private TablePanel tablePanel;
+	
 
 	public MainFrame() {
 
@@ -38,7 +47,15 @@ public class MainFrame extends JFrame {
 		btn = new JButton("click me");
 		tb = new Toolbar();
 		fP = new FormPanel();
+		
+		controller= new Controller();
+		tablePanel= new TablePanel();
+		tablePanel.setData(controller.getPeople());
+		
 		filechooser= new JFileChooser();
+		
+		filechooser.addChoosableFileFilter(new PersonFileFilter());
+		
 		tb.setStringListener(new StringListener() {
 
 			@Override
@@ -50,16 +67,9 @@ public class MainFrame extends JFrame {
 
 		fP.setFormListener(new FormListener() {
 			public void formEventOccurred(FormEvent e) {
-				String name = e.getName();
-				String occupation = e.getOccupation();
-				int ageCat = e.getAgeCategory();
-				String empcat = e.getEmpCat();
-				String taxId = e.getTaxId();
-				boolean isUscitizen = e.isUsCitizen();
-				String gender = e.getGender();
-
-				textpanel.appenText(name + " : " + occupation + ":  " + ageCat + ": " + empcat + taxId + ". "
-						+ isUscitizen + gender + "\n");
+				
+				controller.addPerson(e);
+				tablePanel.refresh();
 			}
 
 			@Override
@@ -68,8 +78,8 @@ public class MainFrame extends JFrame {
 
 			}
 		});
-		add(textpanel, BorderLayout.CENTER);
-		add(btn, BorderLayout.SOUTH);
+		add(tablePanel, BorderLayout.CENTER);
+	
 		add(tb, BorderLayout.NORTH);
 		add(fP, BorderLayout.WEST);
 		setJMenuBar(createMenuBar());
