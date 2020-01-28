@@ -76,6 +76,7 @@ public class FormPanel extends JPanel {
 
 		taxLabel.setEnabled(false);
 		textField.setEnabled(false);
+		
 		citizenCheck.addActionListener(new ActionListener() {
 
 			@Override
@@ -118,7 +119,7 @@ public class FormPanel extends JPanel {
 				boolean isUsCitizen = citizenCheck.isSelected();
 				String gendercommand= genderGroup.getSelection().getActionCommand();
 
-				System.out.println(empCat);
+				
 
 				FormEvent event = new FormEvent(this, name, occupation, ageCat.getId(), empCat, taxId, isUsCitizen, gendercommand);
 				if (formlist != null) {
@@ -127,6 +128,12 @@ public class FormPanel extends JPanel {
 
 			}
 		});
+		
+		Border innerBord = BorderFactory.createTitledBorder("add Person");
+
+		Border outerBord = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+		setBorder(BorderFactory.createCompoundBorder(outerBord, innerBord));
+
 
 		layoutComponent();
 
@@ -139,11 +146,7 @@ public class FormPanel extends JPanel {
 
 	public void layoutComponent() {
 
-		Border innerBord = BorderFactory.createTitledBorder("add Person");
-
-		Border outerBord = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-		setBorder(BorderFactory.createCompoundBorder(outerBord, innerBord));
-
+		
 		setLayout(new GridBagLayout());
 
 		GridBagConstraints gc = new GridBagConstraints();
