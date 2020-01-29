@@ -84,7 +84,7 @@ public void connect() throws Exception {
 	
 	String url = "jdbc:mysql://localhost:3306/swingtest";
 	
-	con = DriverManager.getConnection(url, "root", "g+64vethU8%hfg");
+	con = DriverManager.getConnection(url, "root", "1");
 }
 
 public void disconnect() {
