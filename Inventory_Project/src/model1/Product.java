@@ -7,7 +7,7 @@ public class Product implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static int count= 0;
+	private static int count= 1;
 	private int id;
 	
 	private ProductCategory productCategory ;
@@ -33,6 +33,18 @@ public class Product implements Serializable {
 		this.supplierContact= supplierContact;
 		this.id= count;
 		count++;
+	}
+	
+	public String toString() {
+		return id+":"+productCategory;
+	}
+	
+	public Product(int id,ProductCategory productCategory,int quantity, String originalPrice, String SellingPrice
+			, String Profit,SupplierCategory supCat,  String supplierContact)
+			{
+		this(productCategory, quantity, originalPrice, SellingPrice,Profit,supCat,supplierContact);
+		this.id= id;
+		
 	}
 	
 	public int getId() {

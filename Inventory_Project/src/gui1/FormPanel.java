@@ -97,7 +97,7 @@ public class FormPanel extends JPanel {
 
 		productModel.addElement(new ProductCategory(0, "Cercueil"));
 		productModel.addElement(new ProductCategory(1, "Location"));
-		productModel.addElement(new ProductCategory(2, "Cercueil "));
+		productModel.addElement(new ProductCategory(2, "Decoration "));
 		productList.setModel(productModel);
 
 		productList.setPreferredSize(new Dimension(110, 80));

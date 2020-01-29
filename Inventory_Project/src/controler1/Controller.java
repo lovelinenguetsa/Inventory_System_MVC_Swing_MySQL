@@ -16,7 +16,7 @@ public class Controller {
 	Database db = new Database();
 	
 	public List<Product> getProduct() {
-		return db.getPeople();
+		return db.getProduct();
 	}
 	
 	public void addPerson(FormEvent ev) {
@@ -62,7 +62,7 @@ public class Controller {
 		
 		Product product = new Product(prodCategory, quantity, originalPrice,sellingPrice,profit, supplierCategory, supContact);
 		
-		db.addPerson(product);
+		db.addProduct(product);
 	}
 	
 	public void saveToFile(File file) throws IOException {
@@ -73,7 +73,7 @@ public class Controller {
 	}
 
 	public void removePerson(int row) {
-		db.removePerson(row);
+		db.removeProduct(row);
 		
 	}
 }
