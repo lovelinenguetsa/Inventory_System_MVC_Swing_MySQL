@@ -22,7 +22,7 @@ public class TablePanel extends JPanel {
 	private JTable table;
 	private ProductTableModel tableModel;
 	private JPopupMenu popup;
-	private PersonTableListener personTableListener;
+	private ProductTableListener personTableListener;
 	
 	public TablePanel() {
 		
@@ -76,7 +76,7 @@ table.getSelectionModel().setSelectionInterval(row, row);
 		tableModel.fireTableDataChanged();
 	}
 
-	public void setPersonTableListener(PersonTableListener listener) {
+	public void setPersonTableListener(ProductTableListener listener) {
 		this.personTableListener= listener;
 		
 	}

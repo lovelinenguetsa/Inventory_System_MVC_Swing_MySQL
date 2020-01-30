@@ -24,24 +24,28 @@ public class Database {
 
 	private Connection con;
 	private List<Product> product;
+	private List<Users>  users;
 
 	public Database() {
 		product = new LinkedList<>();
+		users = new LinkedList<>();
 	}
 
 	public void addProduct(Product product1) {
 		product.add(product1);
 	}
+	
+	
 
 	public List<Product> getProduct() {
 		return Collections.unmodifiableList(product);
 	}
 	
-	public void load() {
+	public void load() throws SQLException {
 		product.clear();
 		
 		
-		try(Statement selectstm = con.createStatement()) {
+		Statement selectstm = con.createStatement();
 			
 		
 		String sql= "select id, productname, quantity, originalprice, sellingprice, profit, suppliername, suppliercontact from products order by productname";
@@ -62,10 +66,7 @@ public class Database {
 		 product.add(product2);
 		 System.out.println(product2);
 	}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	
 	}
 
@@ -105,29 +106,24 @@ public class Database {
 
 //// Connect To database////
 
-	public void connect() {
+	public void connect() throws SQLException {
 
 		if (con != null) {
 			return;
 		}
-		try {
+		
 			DriverManager.registerDriver(new org.gjt.mm.mysql.Driver());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
 
 //	String  url = "jdbc:mysql://localhost/product?serverTimezone=UTC";
-		String url = "jdbc:mysql://localhost:3307/product?serverTimezone=UTC";
-		try {
+		String url = "jdbc:mysql://localhost:3307/inventory";
+		
 			con = DriverManager.getConnection(url, "root", "12345");
 			System.out.println("connected:  " + con);
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
+		
 	}
 
-	public void disconnect() {
+	public void disconnect() throws SQLException {
 		if (con != null) {
 			try {
 				con.close();
@@ -140,18 +136,18 @@ public class Database {
 
 /////Save product into Database/////
 
-	public void save() {
+	public void save()  throws SQLException {
 
 		String sql = "select count(*) as count from products where id=?";
 
-		try (PreparedStatement checkstm = con.prepareStatement(sql)) {
+		PreparedStatement checkstm = con.prepareStatement(sql) ;
 
 			String insertSql = "insert into products (id, productname, quantity, originalprice, sellingprice, profit, suppliername, suppliercontact) values (?,?,?,?,?,?,?,?);";
 
-			try (PreparedStatement insertstm = con.prepareStatement(insertSql)) {
+			PreparedStatement insertstm = con.prepareStatement(insertSql);
 				
 				String updateSql = "update products set productname=?, quantity=?, originalprice=?, sellingprice=?, profit=?, suppliername=?, suppliercontact=? where id=?;";
-				try (PreparedStatement updatestm = con.prepareStatement(updateSql)) {
+				PreparedStatement updatestm = con.prepareStatement(updateSql); 
 				for (Product product : product) {
 				
 				int id = product.getId();
@@ -205,11 +201,77 @@ public class Database {
 				updatestm.executeUpdate();
 
 				System.out.println("count for product with id " + id + " is" + count);
-			}}}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			}
+		
 
 	}
+	
+/////Save login data into Database/////
+	
+	public void insertlogdata() throws SQLException{
+		
+			String insertSql = "insert into users (name, pwd, birthdate, gender) values (?,?,?,?)";
+			PreparedStatement insertstm = con.prepareStatement(insertSql);
+			
+			for (Users user : users) {
+			
+			String name =user.getName();
+			char[] pwd= user.getPwd();
+			String birthdate = user.getBirthdate();
+			Gender gender= user.getGender();
+
+			
+
+			
+				int col=1;
+				
+				insertstm.setString(col++,name);
+				insertstm.setString(col++, new String(pwd));
+				
+				if (birthdate!= null) {
+					insertstm.setString(col++, birthdate);
+				}else insertstm.setNull(col, 0);
+				insertstm.setString(col++, birthdate);
+				insertstm.setString(col++, gender.name());
+				
+				
+				insertstm.executeUpdate();
+			
+		}
+	}
+
+	public void loadlogdata() throws SQLException{
+		String sql = "select * from users where name=? and pwd=?";
+
+		PreparedStatement checkstm = con.prepareStatement(sql) ;
+		
+		for (Users user : users) {
+		String name =user.getName();
+		char[] pwd= user.getPwd();
+		
+		int col=1;
+		
+		checkstm.setString(col++,name);
+		checkstm.setString(col++, new String(pwd));
+
+		ResultSet rs = checkstm.executeQuery();
+		if(rs.next()) {
+			
+			///insert MainFrame///
+		}else {
+			///Show messagedialog
+		}
+
+		
+		}	
+		
+	}
+
+	public List<Users> getUsers() {
+		return Collections.unmodifiableList(users);
+	}
+	public void addUsers(Users users1) {
+		users.add(users1);
+	}
 }
+

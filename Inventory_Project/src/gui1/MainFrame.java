@@ -5,10 +5,15 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.prefs.Preferences;
 
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -21,7 +26,7 @@ import org.w3c.dom.events.Event;
 
 import controler1.Controller;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JDialog {
 
 	
 	private Toolbar toolbar;
@@ -32,9 +37,9 @@ public class MainFrame extends JFrame {
 	private prefsDialog prefsDialog;
 	private Preferences prefs;
 
-	public MainFrame() {
+	public MainFrame(JFrame parent) {
 		
-		super("Inventory System");
+		super(parent,"Inventory System", false);
 
 		setLayout(new BorderLayout());
 
@@ -48,7 +53,7 @@ public class MainFrame extends JFrame {
 
 		tablePanel.setData(controller.getProduct());
 
-		tablePanel.setPersonTableListener(new PersonTableListener() {
+		tablePanel.setPersonTableListener(new ProductTableListener() {
 			public void rowDeleted(int row) {
 				controller.removePerson(row);
 			}
@@ -73,13 +78,36 @@ public class MainFrame extends JFrame {
 		prefsDialog.setDefaults(user, pwd, port);
 		fileChooser = new JFileChooser();
 
-		fileChooser.addChoosableFileFilter(new PersonFileFilter());
+		fileChooser.addChoosableFileFilter(new ProductFileFilter());
 
 		setJMenuBar(createMenuBar());
+		
+		
 
-		toolbar.setStringListener(new StringListener() {
-			public void textEmitted(String text) {
-				//textPanel.appenText(text);
+		toolbar.setToolbarListener(new ToolBarListener() {
+			
+			@Override
+			public void saveEventOccured() {
+				connect();
+				try {
+					controller.save();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(MainFrame.this, "unable to save Data to Database.",
+							"Database connection Problem", JOptionPane.ERROR_MESSAGE);	
+				}
+				
+			}
+
+			@Override
+			public void refreshEventOccured() {
+				connect();
+				try {
+					controller.load();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(MainFrame.this, "unable to load Data to Database.",
+							"Database connection Problem", JOptionPane.ERROR_MESSAGE);
+				}
+				tablePanel.refresh();
 			}
 		});
 
@@ -96,16 +124,43 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
+		addWindowListener( new WindowAdapter() {
 		
-		setVisible(true);
+			
+			@Override
+			public void windowClosing (WindowEvent e) {
+				try {
+					controller.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				dispose();
+				System.gc();
+				}
+			
+			
+			
+		});
+		
+		//setVisible(true);
 		add(formPanel, BorderLayout.WEST);
 		add(toolbar, BorderLayout.NORTH);
 		add(tablePanel, BorderLayout.CENTER);
 
 		setMinimumSize(new Dimension(500, 400));
 		setSize(600, 500);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setLocationRelativeTo(parent);
+	}
+	
+	public void connect() {
+		try {
+			controller.connect();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(MainFrame.this, "Cannot connect to Database.",
+					"Database connection Problem", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private JMenuBar createMenuBar() {
@@ -197,7 +252,11 @@ public class MainFrame extends JFrame {
 						"Do you really want to exit the application?", "Confirm Exit", JOptionPane.OK_CANCEL_OPTION);
 
 				if (action == JOptionPane.OK_OPTION) {
-					System.exit(0);
+					 WindowListener[] listeners= getWindowListeners();
+					 
+					 for (WindowListener windowListener : listeners) {
+						windowListener.windowClosing(new WindowEvent(MainFrame.this, 0));
+					}
 				}
 			}
 		});

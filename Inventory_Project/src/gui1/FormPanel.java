@@ -1,5 +1,6 @@
 package gui1;
 
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,6 +26,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.text.MaskFormatter;
+import javax.swing.JComponent;
 
 public class FormPanel extends JPanel {
 

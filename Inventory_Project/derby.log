@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Jan 30 11:02:19 CET 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-016f-f5e6-c2b4-00000781ce10 
+on database directory memory:C:\Users\LNGU158\git\Swing\Inventory_Project\products with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@c387f44 
+Loaded from file:/C:/Users/LNGU158/git/Swing/Inventory_Project/LIB/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=13.0.2+8
+user.dir=C:\Users\LNGU158\git\Swing\Inventory_Project
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

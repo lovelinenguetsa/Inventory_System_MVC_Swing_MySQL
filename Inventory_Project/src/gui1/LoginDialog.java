@@ -9,39 +9,53 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 
-public class prefsDialog extends JDialog {
-	
+import controler1.Controller;
+
+public class LoginDialog extends JFrame {
 	private JButton okbut;
 	private JButton cancelbut;
 	private JSpinner portSpinner;
 	private SpinnerNumberModel spinnerModel;
 	private JTextField textField;
 	private JPasswordField password;
-	private PrefsListener prefsListener;
+	private LoginListener logsListener;
+	private MainFrame mainframe;
+	private Controller controller;
+	private SignUpDialog  signup;
+
 	
 	
-public prefsDialog(MainFrame parent) {
-	super(parent, "Preferences", false);
+public LoginDialog() {
+	
+	super("Sign up");
 	okbut= new JButton("OK");
 	cancelbut= new JButton("Cancel");
-	spinnerModel= new SpinnerNumberModel(3306, 0, 9999, 1);
-	portSpinner= new JSpinner(spinnerModel);
+	
+	
 	textField= new JTextField(10);
 	password= new JPasswordField(10);
+	mainframe= new MainFrame(this);
+	controller= new Controller();
+	
+	signup= new SignUpDialog();
+	
 	
 	//password.setEchoChar(*);
 	
@@ -51,16 +65,18 @@ public prefsDialog(MainFrame parent) {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Integer port= (Integer) portSpinner.getValue();
 			
-			String user= textField.getText();
-			char[] pwd= password.getPassword();
+		
+		try {
+			controller.connect();
+			controller.loadlogdata();
+			mainframe.setVisible(true);
+		} catch (SQLException e2) {
+			JOptionPane.showMessageDialog(LoginDialog.this, "unable to save Data to Database.",
+					"Database connection Problem", JOptionPane.ERROR_MESSAGE);	
+		}
+		
 			
-			
-			if (prefsListener!= null) {
-				prefsListener.preferenceSet(user, new String(pwd), port);
-			}
-			setVisible(false);
 		}
 	});
 	
@@ -73,8 +89,23 @@ cancelbut.addActionListener(new ActionListener() {
 		}
 	});
 	
-	setSize(270, 200);
-	setLocationRelativeTo(parent);
+	setSize(400, 400);
+	setVisible(true);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+}
+
+private JMenu createSignUpMenu() {
+	JMenu signupMenu = new JMenu("click here to Sign Up");
+	signupMenu.addActionListener(new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			signup.setVisible(true);
+			
+		}
+	});
+	return signupMenu;
+	
 }
 
 public void layoutComponent() {
@@ -82,7 +113,7 @@ public void layoutComponent() {
 	JPanel controPanel= new JPanel();
 	JPanel buttonPanel= new JPanel();
 	int space = 15;
-	Border titleBorder= BorderFactory.createTitledBorder("Database Preferences");
+	Border titleBorder= BorderFactory.createTitledBorder("Login Data");
 	Border spaceBorder= BorderFactory.createEmptyBorder(space, space, space, space);
 	
 	controPanel.setBorder(BorderFactory.createCompoundBorder(spaceBorder, titleBorder));
@@ -91,7 +122,7 @@ public void layoutComponent() {
 	
 	GridBagConstraints gc= new GridBagConstraints();
 	
-	Insets rightPadding=  new Insets(0, 0, 0, 15);
+	Insets rightPadding=  new Insets(0, 0, 0, 75);
 	Insets noPadding= new Insets(0, 0, 0, 0);
 	
 ////next row//
@@ -125,19 +156,15 @@ public void layoutComponent() {
 	gc.insets=noPadding;
 	controPanel.add(password, gc);
 	
-	gc.gridx= 0;
+	gc.gridx= 1;
 	gc.gridy++;
 	gc.weighty= 1;
 	gc.weightx= 1;
-	gc.fill = GridBagConstraints.NONE;
-	gc.anchor= GridBagConstraints.EAST;
-	gc.insets= rightPadding;
-	controPanel.add( new JLabel("Port: "), gc);
+	gc.fill = GridBagConstraints.CENTER;
+	gc.anchor= GridBagConstraints.CENTER;
 	
-	gc.gridx++;
-	gc.anchor= GridBagConstraints.WEST;
-	gc.insets=noPadding;
-	controPanel.add(portSpinner, gc);
+	controPanel.add( createSignUpMenu(), gc);
+	
 	
 	
 	/// Button row///
@@ -161,14 +188,14 @@ public void layoutComponent() {
 	
 }
 
-public void setDefaults(String user, String passwort, int port) {
+public void setDefaults(String user, String passwort) {
 	textField.setText(user);
 	password.setText(passwort);
-	portSpinner.setValue(port);
+	
 }
 
-public void setPrefsListener(PrefsListener prefsListener) {
-	this.prefsListener= prefsListener;
+public void setlogsListener(LoginListener logsListener) {
+	this.logsListener= logsListener;
 	
 }
 }

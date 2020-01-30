@@ -9,7 +9,7 @@ public class App {
 			
 			@Override
 			public void run() {
-				new MainFrame();
+				new LoginDialog();
 				
 			}
 		});
