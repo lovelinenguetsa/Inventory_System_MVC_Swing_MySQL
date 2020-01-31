@@ -26,7 +26,7 @@ import org.w3c.dom.events.Event;
 
 import controler1.Controller;
 
-public class MainFrame extends JDialog {
+public class MainFrame extends JFrame {
 
 	
 	private Toolbar toolbar;
@@ -39,7 +39,7 @@ public class MainFrame extends JDialog {
 
 	public MainFrame(JFrame parent) {
 		
-		super(parent,"Inventory System", false);
+		super("Inventory System");
 
 		setLayout(new BorderLayout());
 

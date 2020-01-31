@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import gui1.MainFrame;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Connection;
@@ -24,7 +26,7 @@ public class Database {
 
 	private Connection con;
 	private List<Product> product;
-	private List<Users>  users;
+	private List<Users> users;
 
 	public Database() {
 		product = new LinkedList<>();
@@ -34,40 +36,36 @@ public class Database {
 	public void addProduct(Product product1) {
 		product.add(product1);
 	}
-	
-	
 
 	public List<Product> getProduct() {
 		return Collections.unmodifiableList(product);
 	}
-	
+
 	public void load() throws SQLException {
 		product.clear();
-		
-		
+
 		Statement selectstm = con.createStatement();
-			
-		
-		String sql= "select id, productname, quantity, originalprice, sellingprice, profit, suppliername, suppliercontact from products order by productname";
-	ResultSet rs= selectstm.executeQuery(sql);
-	
-	while (rs.next()) {
-		int id=rs.getInt("id");
-		String name= rs.getString("productname");
-		int qtity=rs.getInt("quantity");
-		String name1= rs.getString("originalprice");
-		String name2= rs.getString("sellingprice");
-		String name3= rs.getString("profit");
-		String name4= rs.getString("suppliername");
-		String name5= rs.getString("suppliercontact");
-		System.out.println("name = "+id+" "+name1+" "+name2);
-		
-		 Product product2=new Product(id,ProductCategory.valueOf(name),qtity, name1, name2, name3, SupplierCategory.valueOf(name4), name5 );
-		 product.add(product2);
-		 System.out.println(product2);
-	}
-		
-	
+
+		String sql = "select id, productname, quantity, originalprice, sellingprice, profit, suppliername, suppliercontact from products order by productname";
+		ResultSet rs = selectstm.executeQuery(sql);
+
+		while (rs.next()) {
+			int id = rs.getInt("id");
+			String name = rs.getString("productname");
+			int qtity = rs.getInt("quantity");
+			String name1 = rs.getString("originalprice");
+			String name2 = rs.getString("sellingprice");
+			String name3 = rs.getString("profit");
+			String name4 = rs.getString("suppliername");
+			String name5 = rs.getString("suppliercontact");
+			System.out.println("name = " + id + " " + name1 + " " + name2);
+
+			Product product2 = new Product(id, ProductCategory.valueOf(name), qtity, name1, name2, name3,
+					SupplierCategory.valueOf(name4), name5);
+			product.add(product2);
+			System.out.println(product2);
+		}
+
 	}
 
 	public void saveToFile(File file) throws IOException {
@@ -111,16 +109,15 @@ public class Database {
 		if (con != null) {
 			return;
 		}
-		
-			DriverManager.registerDriver(new org.gjt.mm.mysql.Driver());
-		
+
+		DriverManager.registerDriver(new org.gjt.mm.mysql.Driver());
 
 //	String  url = "jdbc:mysql://localhost/product?serverTimezone=UTC";
 		String url = "jdbc:mysql://localhost:3307/inventory";
-		
-			con = DriverManager.getConnection(url, "root", "12345");
-			System.out.println("connected:  " + con);
-		
+
+		con = DriverManager.getConnection(url, "root", "12345");
+		System.out.println("connected:  " + con);
+
 	}
 
 	public void disconnect() throws SQLException {
@@ -136,142 +133,194 @@ public class Database {
 
 /////Save product into Database/////
 
-	public void save()  throws SQLException {
+	public void save() throws SQLException {
 
 		String sql = "select count(*) as count from products where id=?";
 
-		PreparedStatement checkstm = con.prepareStatement(sql) ;
+		PreparedStatement checkstm = con.prepareStatement(sql);
 
-			String insertSql = "insert into products (id, productname, quantity, originalprice, sellingprice, profit, suppliername, suppliercontact) values (?,?,?,?,?,?,?,?);";
+		String insertSql = "insert into products (id, productname, quantity, originalprice, sellingprice, profit, suppliername, suppliercontact) values (?,?,?,?,?,?,?,?);";
 
-			PreparedStatement insertstm = con.prepareStatement(insertSql);
-				
-				String updateSql = "update products set productname=?, quantity=?, originalprice=?, sellingprice=?, profit=?, suppliername=?, suppliercontact=? where id=?;";
-				PreparedStatement updatestm = con.prepareStatement(updateSql); 
-				for (Product product : product) {
-				
-				int id = product.getId();
-				ProductCategory prod = product.getProductCategory();
-				int qtity = product.getQuantity();
-				String orprice = product.getOriginalPrice();
-				String sellprice = product.getSellingPrice();
-				String profit = product.getProfit();
-				SupplierCategory supcat = product.getSupCat();
-				String contact = product.getSupplierContact();
+		PreparedStatement insertstm = con.prepareStatement(insertSql);
 
-				
-				
-				checkstm.setInt(1, id);
+		String updateSql = "update products set productname=?, quantity=?, originalprice=?, sellingprice=?, profit=?, suppliername=?, suppliercontact=? where id=?;";
+		PreparedStatement updatestm = con.prepareStatement(updateSql);
+		for (Product product : product) {
 
-				ResultSet rs = checkstm.executeQuery();
-				rs.next();
+			int id = product.getId();
+			ProductCategory prod = product.getProductCategory();
+			int qtity = product.getQuantity();
+			String orprice = product.getOriginalPrice();
+			String sellprice = product.getSellingPrice();
+			String profit = product.getProfit();
+			SupplierCategory supcat = product.getSupCat();
+			String contact = product.getSupplierContact();
 
-				int count = rs.getInt(1);
+			checkstm.setInt(1, id);
 
-				if (count == 0) {
-					System.out.println("inserting data to " + id);
-					
-					int col=1;
-					
-					insertstm.setInt(col++, id);
-					insertstm.setString(col++, prod.name());
-					insertstm.setInt(col++, qtity);
-					insertstm.setString(col++, orprice);
-					insertstm.setString(col++, sellprice);
-					insertstm.setString(col++, profit);
-					insertstm.setString(col++, supcat.name());
-					insertstm.setString(col++, contact);
-					
-					insertstm.executeUpdate();
-				} else
-					System.out.println("updating data to " + id);
-				
-				int col=1;
-				
-				
-				updatestm.setString(col++, prod.name());
-				updatestm.setInt(col++, qtity);
-				updatestm.setString(col++, orprice);
-				updatestm.setString(col++, sellprice);
-				updatestm.setString(col++, profit);
-				updatestm.setString(col++, supcat.name());
-				updatestm.setString(col++, contact);
-				updatestm.setInt(col++, id);
-				
-				updatestm.executeUpdate();
+			ResultSet rs = checkstm.executeQuery();
+			rs.next();
 
-				System.out.println("count for product with id " + id + " is" + count);
-			}
-		
+			int count = rs.getInt(1);
+
+			if (count == 0) {
+				System.out.println("inserting data to " + id);
+
+				int col = 1;
+
+				insertstm.setInt(col++, id);
+				insertstm.setString(col++, prod.name());
+				insertstm.setInt(col++, qtity);
+				insertstm.setString(col++, orprice);
+				insertstm.setString(col++, sellprice);
+				insertstm.setString(col++, profit);
+				insertstm.setString(col++, supcat.name());
+				insertstm.setString(col++, contact);
+
+				insertstm.executeUpdate();
+			} else
+				System.out.println("updating data to " + id);
+
+			int col = 1;
+
+			updatestm.setString(col++, prod.name());
+			updatestm.setInt(col++, qtity);
+			updatestm.setString(col++, orprice);
+			updatestm.setString(col++, sellprice);
+			updatestm.setString(col++, profit);
+			updatestm.setString(col++, supcat.name());
+			updatestm.setString(col++, contact);
+			updatestm.setInt(col++, id);
+
+			updatestm.executeUpdate();
+
+			System.out.println("count for product with id " + id + " is" + count);
+		}
 
 	}
-	
+
 /////Save login data into Database/////
-	
-	public void insertlogdata() throws SQLException{
-		
-			String insertSql = "insert into users (name, pwd, birthdate, gender) values (?,?,?,?)";
-			PreparedStatement insertstm = con.prepareStatement(insertSql);
-			
-			for (Users user : users) {
-			
-			String name =user.getName();
-			char[] pwd= user.getPwd();
+
+	public void insertlogdata() throws SQLException {
+
+		String checkSql = "select count(*) as count from people where name=?";
+		PreparedStatement checkStmt = con.prepareStatement(checkSql);
+		String insertSql = "insert into users (name, pwd, birthdate, gender) values (?,?,?,?)";
+		PreparedStatement insertstm = con.prepareStatement(insertSql);
+
+		for (Users user : users) {
+
+			String name = user.getName();
+			char[] pwd = user.getPwd();
 			String birthdate = user.getBirthdate();
-			Gender gender= user.getGender();
+			Gender gender = user.getGender();
 
-			
+			checkStmt.setString(1, name);
 
-			
-				int col=1;
-				
-				insertstm.setString(col++,name);
+			ResultSet checkResult = checkStmt.executeQuery();
+			checkResult.next();
+
+			int count = 0;
+
+			if (count == 0) {
+
+				System.out.println("inserting userdata to database");
+				int col = 1;
+
+				insertstm.setString(col++, name);
 				insertstm.setString(col++, new String(pwd));
-				
-				if (birthdate!= null) {
+
+				if (birthdate != null) {
 					insertstm.setString(col++, birthdate);
-				}else insertstm.setNull(col, 0);
+				} else
+					insertstm.setNull(col, 0);
 				insertstm.setString(col++, birthdate);
 				insertstm.setString(col++, gender.name());
-				
-				
+
 				insertstm.executeUpdate();
-			
+			} else {
+				System.out.println("name elready exist please insert name");
+
+			}
+			checkStmt.close();
+			insertstm.close();
 		}
 	}
 
-	public void loadlogdata() throws SQLException{
-		String sql = "select * from users where name=? and pwd=?";
+	int count = 0;
 
-		PreparedStatement checkstm = con.prepareStatement(sql) ;
-		
+	public void loadlogdata() throws SQLException {
+		users.clear();
+		String sql = "select name, pwd from users where name=? and pwd=?";
+
+		PreparedStatement checkstm = con.prepareStatement(sql);
 		for (Users user : users) {
-		String name =user.getName();
-		char[] pwd= user.getPwd();
+		String name = user.getName();
 		
-		int col=1;
+		char[] pwd = user.getPwd();
 		
-		checkstm.setString(col++,name);
-		checkstm.setString(col++, new String(pwd));
+		 checkstm.setString(1, name);
+         checkstm.setString(2, new String(pwd));
+         
+         ResultSet rs = checkstm.executeQuery();
+         
+         checkResulset(rs);
+         
 
-		ResultSet rs = checkstm.executeQuery();
-		if(rs.next()) {
-			
-			///insert MainFrame///
-		}else {
-			///Show messagedialog
+		}
+		checkstm.close();
+	}
+
+	public boolean checkResulset(ResultSet rs) throws SQLException {
+		 if (rs.next()) {
+			 return true;
+		 }else return false;
+		
+	}
+
+	public int getCount() {
+
+		if (count == 1) {
+
+			System.out.println("succesfull");
+			return 1;
+		}
+		// openframe(MainFrame mainFrame);
+		/// insert MainFrame///
+		else if (count > 0) {
+			System.out.println("Duplicate User! access Denied");
+			return 2;
+
+			/// Show messagedialog
+		} else {
+			System.out.println("User not found");
+			return 3;
 		}
 
-		
-		}	
-		
 	}
 
 	public List<Users> getUsers() {
 		return Collections.unmodifiableList(users);
 	}
+
 	public void addUsers(Users users1) {
 		users.add(users1);
 	}
-}
 
+	public void createRegisterTable() throws SQLException {
+
+		try (Statement stm = con.createStatement()) {
+
+			String sql = "CREATE TABLE inventory.users ("
+
+					+ "name VARCHAR(45) NOT NULL," + "pwd VARCHAR(45) NOT NULL," + "birthdate VARCHAR(45) NOT NULL,"
+					+ "gender ENUM('male','female') NOT NULL,"
+
+					+ "PRIMARY KEY (name))";
+
+			stm.executeUpdate(sql);
+
+			System.out.println("Tabelle wurde erzeugt");
+		}
+	}
+}

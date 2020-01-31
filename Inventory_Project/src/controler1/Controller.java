@@ -2,6 +2,7 @@ package controler1;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -135,5 +136,13 @@ Gender genderCat;
 	
 	public void insertlogdata() throws SQLException{
 		db.insertlogdata();
+	}
+	
+	public void createRegisterTable() throws SQLException {
+		db.createRegisterTable();
+	}
+	
+	public boolean checkResulset(ResultSet rs) throws SQLException {
+		return db.checkResulset(rs);
 	}
 }
