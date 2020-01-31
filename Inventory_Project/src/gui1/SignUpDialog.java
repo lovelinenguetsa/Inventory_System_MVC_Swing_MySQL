@@ -1,6 +1,7 @@
 package gui1;
 
 import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -42,6 +43,8 @@ public class SignUpDialog extends JDialog implements ActionListener {
 	private JDatePanelImpl birtdatefield;
 	private JDatePickerImpl datePicker;
 	private Controller controller;
+	private ToolBarListener strlist;
+	private FormListener formlist;
 
 	/**
 	 * Create the frame.
@@ -98,29 +101,34 @@ public class SignUpDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == submitbtn) {
-		
+			
+				
 			int x = 0;
 			String s1 = nameField.getText();
-			String s2 = pwdField.getUIClassID();
+			
 
 			char[] s3 = pwdField.getPassword();
 			char[] s4 = confpwdField.getPassword();
-			Date s5 = (Date) datePicker.getModel().getValue();
+			Date s5 =  (Date) datePicker.getModel().getValue();
 			String s7 = genderGroup.getSelection().getActionCommand();
 			
-			if (new String(s3).equals(new String(s4))) {
+			ActionEventUser event= new ActionEventUser(this, s1, s3, s5, new String(s7));
+
+			if (formlist != null) {
+				//formlist.formEventOccurred(event);
+			}
 
 				try {
 					controller.connect();
 //					controller.createRegisterTable();
 					controller.insertlogdata();
 					System.out.println("submit");
-					if (controller.CheckinsertedData() != 0) {
-						JOptionPane.showMessageDialog(SignUpDialog.this, "name elready exist.",
-								"Database connection Problem", JOptionPane.ERROR_MESSAGE);
-					} else
-						JOptionPane.showMessageDialog(SignUpDialog.this, "Data succesfully added.","yes",
-								JOptionPane.INFORMATION_MESSAGE);
+//					if (controller.checkResulset()) {
+//						JOptionPane.showMessageDialog(SignUpDialog.this, "name elready exist.",
+//								"Database connection Problem", JOptionPane.ERROR_MESSAGE);
+//					} else
+//						JOptionPane.showMessageDialog(SignUpDialog.this, "Data succesfully added.","yes",
+//								JOptionPane.INFORMATION_MESSAGE);
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(SignUpDialog.this, "unable to insert Data to Database.",
 							"Database connection Problem", JOptionPane.ERROR_MESSAGE);
@@ -134,11 +142,13 @@ public class SignUpDialog extends JDialog implements ActionListener {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			}
+		
 
-		if (e.getSource() == clearbtn) {
-			setVisible(false);
-		}
+	if(e.getSource()==clearbtn)
+
+	{
+		setVisible(false);
+	}
 	}
 
 	private void layoutComponent() {

@@ -27,7 +27,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 
 import controler1.Controller;
-import model1.UserHome;
+
 
 public class LoginDialog extends JFrame implements ActionListener {
 	private JButton okbut;
@@ -72,35 +72,30 @@ public class LoginDialog extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	public void actionPerformed(FormEventUser e) {
+	public void actionPerformed(ActionEvent e) {
 		
 		String userName = textField.getText();
         char[]  p= password.getPassword();
         String pwd= new String(p);
         
 		if (e.getSource() == okbut) {
+			mainframe.setVisible(true);
+			if(logsListener != null) {
+				logsListener.loginSet(userName, pwd);
+		
 			
-			
-//			 if (rs.next()) {
-//	             dispose();
-//	             UserHome ah = new UserHome(userName);
-//	             ah.setTitle("Welcome");
-//	             ah.setVisible(true);
-//	             JOptionPane.showMessageDialog(btnNewButton, "You have successfully logged in");
-//	         } else {
-//	             JOptionPane.showMessageDialog(btnNewButton, "Wrong Username & Password");
-//	         }
-
 			try {
 				controller.connect();
-				controller.loadlogdata();
+				
+				System.out.println("but");
+//				;
 //			new MainFrame(loginDialog);
 				System.out.println("loaded");
 				
-				if (controller.checkResulset(rs)) {
-					dispose();
-					controller.addUsers(e);
-					mainframe.setVisible(true);
+				if (controller.loadlogdata()) {
+					//dispose();
+					controller.addUsers((ActionEventUser) e);
+					//mainframe.setVisible(true);
 				
 				} else
 					 JOptionPane.showMessageDialog(LoginDialog.this, "Wrong Username & Password");
@@ -111,10 +106,10 @@ public class LoginDialog extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(LoginDialog.this, "unable to save Data to Database.",
 						"Database connection Problem", JOptionPane.ERROR_MESSAGE);
 			}
-
+			}
 			try {
 				controller.close();
-				dispose();
+			
 				System.gc();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
@@ -218,4 +213,6 @@ public class LoginDialog extends JFrame implements ActionListener {
 		this.logsListener = logsListener;
 
 	}
+
+
 }

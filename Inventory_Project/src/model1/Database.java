@@ -5,28 +5,47 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.DriverManager;
+import java.sql.NClob;
 import java.sql.SQLException;
+import java.sql.SQLWarning;
+import java.sql.SQLXML;
 import java.sql.Statement;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import gui1.MainFrame;
 
 import java.sql.PreparedStatement;
+import java.sql.Ref;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.RowId;
+import java.sql.Array;
+import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.Date;
 
 public class Database {
 
 	private Connection con;
 	private List<Product> product;
 	private List<Users> users;
+	  
 
 	public Database() {
 		product = new LinkedList<>();
@@ -200,7 +219,7 @@ public class Database {
 	}
 
 /////Save login data into Database/////
-
+	 
 	public void insertlogdata() throws SQLException {
 
 		String checkSql = "select count(*) as count from people where name=?";
@@ -212,7 +231,7 @@ public class Database {
 
 			String name = user.getName();
 			char[] pwd = user.getPwd();
-			String birthdate = user.getBirthdate();
+			java.util.Date birthdate = user.getBirthdate();
 			Gender gender = user.getGender();
 
 			checkStmt.setString(1, name);
@@ -231,10 +250,10 @@ public class Database {
 				insertstm.setString(col++, new String(pwd));
 
 				if (birthdate != null) {
-					insertstm.setString(col++, birthdate);
+					insertstm.setObject(col++ , birthdate);
 				} else
 					insertstm.setNull(col, 0);
-				insertstm.setString(col++, birthdate);
+				
 				insertstm.setString(col++, gender.name());
 
 				insertstm.executeUpdate();
@@ -249,7 +268,7 @@ public class Database {
 
 	int count = 0;
 
-	public void loadlogdata() throws SQLException {
+	public boolean loadlogdata() throws SQLException {
 		users.clear();
 		String sql = "select name, pwd from users where name=? and pwd=?";
 
@@ -262,19 +281,23 @@ public class Database {
 		 checkstm.setString(1, name);
          checkstm.setString(2, new String(pwd));
          
-         ResultSet rs = checkstm.executeQuery();
+         ResultSet  rs = checkstm.executeQuery();
          
-         checkResulset(rs);
-         
-
+         if (rs.next()) {
+        	 
+			 return true;
+			 
+		 }else return false;
+        
 		}
 		checkstm.close();
+		return false;
 	}
 
-	public boolean checkResulset(ResultSet rs) throws SQLException {
-		 if (rs.next()) {
-			 return true;
-		 }else return false;
+	public boolean checkResulset() throws SQLException {
+		
+		return loadlogdata();
+		
 		
 	}
 

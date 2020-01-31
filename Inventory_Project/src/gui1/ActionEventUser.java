@@ -1,12 +1,14 @@
 package gui1;
 
+import java.awt.event.ActionEvent;
+import java.util.Date;
 import java.util.EventObject;
 
-public class FormEventUser extends EventObject {
+public class ActionEventUser extends ActionEvent {
 	
 	private String name;
 	private char[] pwd;
-	private String birthdate;
+	private Date birthdate;
 	private String gender;
 
 	public String getName() {
@@ -25,11 +27,11 @@ public class FormEventUser extends EventObject {
 		this.pwd = pwd;
 	}
 
-	public String getBirthdate() {
+	public Date getBirthdate() {
 		return birthdate;
 	}
 
-	public void setBirthdate(String birthdate) {
+	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
 	}
 
@@ -40,17 +42,21 @@ public class FormEventUser extends EventObject {
 	public void setGender(String gender) {
 		this.gender = gender;
 	}
+	
+	int id= 1;
+	String command = "";
 
-	public FormEventUser(Object source, String name, char[] pwd, String birthdate, String gender) {
-		super(source);
+	public ActionEventUser(Object source, String name, char[] pwd, Date birthdate, String gender) {
+		super(source, name.length(), name );
 		this.name = name;
 		this.pwd = pwd;
 		this.birthdate = birthdate;
 		this.gender = gender;
 	}
 
-	public FormEventUser(Object source) {
-		super(source);
+	public ActionEventUser(Object source, int id, String command) {
+		  
+		super(source, id, command );
 		
 	}
 	

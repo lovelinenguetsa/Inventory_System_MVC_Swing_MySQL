@@ -1,18 +1,18 @@
 package model1;
 
-
+import java.util.Date;
 
 public class Users {
 	
 	private String name;
 	private char[] pwd;
-	private String birthdate;
+	private Date birthdate;
 	private Gender gender;
-	public Users(String name, char[] pwd, String birthdate, Gender gender) {
+	public Users(String name, char[] pwd, Date birthdate2, Gender gender) {
 	
 		this.name = name;
 		this.pwd = pwd;
-		this.birthdate = birthdate;
+		this.birthdate = birthdate2;
 		this.gender = gender;
 	}
 	public String getName() {
@@ -27,10 +27,10 @@ public class Users {
 	public void setPwd(char[] pwd) {
 		this.pwd = pwd;
 	}
-	public String getBirthdate() {
+	public Date getBirthdate() {
 		return birthdate;
 	}
-	public void setBirthdate(String birthdate) {
+	public void setBirthdate(Date birthdate) {
 		this.birthdate = birthdate;
 	}
 	public Gender getGender() {

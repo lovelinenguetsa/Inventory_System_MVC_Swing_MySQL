@@ -1,13 +1,16 @@
 package controler1;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
+import gui1.ActionEventUser;
 import gui1.FormEvent;
-import gui1.FormEventUser;
+
 import model1.Database;
 import model1.Gender;
 import model1.Product;
@@ -88,11 +91,11 @@ public class Controller {
 	//// for User
 	
 	
-	public void addUsers(FormEventUser ev) {
-		String name= ev.getName();
-		char[] pwd= ev.getPwd();
-		String birthdate= ev.getBirthdate();
-		String gender = ev.getGender();
+	public void addUsers(ActionEventUser e) {
+		String name= e.getName();
+		char[] pwd= e.getPwd();
+		Date birthdate= e.getBirthdate();
+		String gender = e.getGender();
 		
 Gender genderCat;
 		
@@ -130,8 +133,8 @@ Gender genderCat;
 		db.disconnect();
 	}
 	
-	public void loadlogdata() throws SQLException {
-		db.loadlogdata();;
+	public boolean loadlogdata() throws SQLException {
+		return db.loadlogdata();
 	}
 	
 	public void insertlogdata() throws SQLException{
@@ -142,7 +145,5 @@ Gender genderCat;
 		db.createRegisterTable();
 	}
 	
-	public boolean checkResulset(ResultSet rs) throws SQLException {
-		return db.checkResulset(rs);
-	}
+	
 }
