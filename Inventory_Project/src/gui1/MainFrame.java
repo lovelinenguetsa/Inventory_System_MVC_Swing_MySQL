@@ -20,9 +20,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 
 import org.w3c.dom.events.Event;
+
 
 import controler1.Controller;
 
@@ -36,6 +39,10 @@ public class MainFrame extends JFrame {
 	private TablePanel tablePanel;
 	private prefsDialog prefsDialog;
 	private Preferences prefs;
+	private JSplitPane splitpane;
+	private JTabbedPane tabbedpane;
+	private TextPanel textpane;
+	private MessagePanel messagepane;
 
 	public MainFrame(JFrame parent) {
 		
@@ -49,11 +56,19 @@ public class MainFrame extends JFrame {
 		tablePanel = new TablePanel();
 		prefsDialog = new prefsDialog(this);
 		controller = new Controller();
+		tabbedpane= new JTabbedPane();
+		textpane= new TextPanel();
+		messagepane= new MessagePanel();
+		splitpane= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, formPanel, tabbedpane);
+		splitpane.setOneTouchExpandable(true);
+		
+		tabbedpane.addTab("Product Database", tablePanel);
+		tabbedpane.addTab("Message", messagepane);
 		prefs = Preferences.userRoot().node("db");
 
 		tablePanel.setData(controller.getProduct());
 
-		tablePanel.setPersonTableListener(new ProductTableListener() {
+		tablePanel.setPersonTableListener(new ProductAndUserListener() {
 			public void rowDeleted(int row) {
 				controller.removePerson(row);
 			}
@@ -84,7 +99,7 @@ public class MainFrame extends JFrame {
 		
 		
 
-		toolbar.setToolbarListener(new ToolBarListener() {
+		toolbar.setToolbarListener(new ToolListener() {
 			
 			@Override
 			public void saveEventOccured() {
@@ -108,6 +123,30 @@ public class MainFrame extends JFrame {
 							"Database connection Problem", JOptionPane.ERROR_MESSAGE);
 				}
 				tablePanel.refresh();
+			}
+
+			@Override
+			public void cancelEventOccured() {
+				connect();
+				try {
+					controller.loadlogdata();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(MainFrame.this, "unable to cancel Data to Database.",
+							"Database connection Problem", JOptionPane.ERROR_MESSAGE);
+				}
+				
+			}
+
+			@Override
+			public void saveUserEventOccured() {
+				connect();
+				try {
+					controller.savelogdata();
+				} catch (SQLException e) {
+					JOptionPane.showMessageDialog(MainFrame.this, "unable to save Data to Database.",
+							"Database connection Problem", JOptionPane.ERROR_MESSAGE);	
+				}
+				
 			}
 		});
 
@@ -144,11 +183,11 @@ public class MainFrame extends JFrame {
 		});
 		
 		//setVisible(true);
-		add(formPanel, BorderLayout.WEST);
-		add(toolbar, BorderLayout.NORTH);
-		add(tablePanel, BorderLayout.CENTER);
+	
+		add(toolbar, BorderLayout.PAGE_START);
+		add(splitpane, BorderLayout.CENTER);
 
-		setMinimumSize(new Dimension(500, 400));
+		setMinimumSize(new Dimension(600, 500));
 		setSize(600, 500);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setLocationRelativeTo(parent);
@@ -201,7 +240,9 @@ public class MainFrame extends JFrame {
 		showFormItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				JCheckBoxMenuItem menuItem = (JCheckBoxMenuItem) ev.getSource();
-
+if (menuItem.isSelected()) {
+	splitpane.setDividerLocation((int)formPanel.getMinimumSize().getWidth());
+}
 				formPanel.setVisible(menuItem.isSelected());
 			}
 		});

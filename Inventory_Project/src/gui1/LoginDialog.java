@@ -92,13 +92,13 @@ public class LoginDialog extends JFrame implements ActionListener {
 //			new MainFrame(loginDialog);
 				System.out.println("loaded");
 				
-				if (controller.loadlogdata()) {
+				controller.loadlogdata();
 					//dispose();
 					controller.addUsers((ActionEventUser) e);
 					//mainframe.setVisible(true);
 				
-				} else
-					 JOptionPane.showMessageDialog(LoginDialog.this, "Wrong Username & Password");
+//				} else
+//					 JOptionPane.showMessageDialog(LoginDialog.this, "Wrong Username & Password");
 
 				
 

@@ -22,7 +22,7 @@ public class TablePanel extends JPanel {
 	private JTable table;
 	private ProductTableModel tableModel;
 	private JPopupMenu popup;
-	private ProductTableListener personTableListener;
+	private ProductAndUserListener productTableListener;
 	
 	public TablePanel() {
 		
@@ -54,8 +54,8 @@ table.getSelectionModel().setSelectionInterval(row, row);
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int row= table.getSelectedRow();
-				if (personTableListener != null) {
-					personTableListener.rowDeleted(row);
+				if (productTableListener != null) {
+					productTableListener.rowDeleted(row);
 					tableModel.fireTableRowsDeleted(row, row);
 				}
 				
@@ -76,8 +76,8 @@ table.getSelectionModel().setSelectionInterval(row, row);
 		tableModel.fireTableDataChanged();
 	}
 
-	public void setPersonTableListener(ProductTableListener listener) {
-		this.personTableListener= listener;
+	public void setPersonTableListener(ProductAndUserListener listener) {
+		this.productTableListener= listener;
 		
 	}
 }

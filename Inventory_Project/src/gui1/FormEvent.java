@@ -5,9 +5,9 @@ public class FormEvent extends EventObject {
 
 	private int ProductCat;
 	private int quantity;
-	private String originalPrice;
-	private String Profit;
-	private String SellingPrice;
+	private double originalPrice;
+	private double Profit;
+	private double SellingPrice;
 	private String Suppliername;
 	private String supplierContact;
 	
@@ -17,8 +17,8 @@ public class FormEvent extends EventObject {
 		super(source);
 	}
 
-	public FormEvent(Object source, int ProductCat, int quantity, String originalPrice, String Profit,
-			String SellingPrice, String Suppliername,String supplierContact ) {
+	public FormEvent(Object source, int ProductCat, int quantity, double originalPrice, double Profit,
+			double SellingPrice, String Suppliername,String supplierContact ) {
 		
 		super(source);
 
@@ -48,27 +48,27 @@ public class FormEvent extends EventObject {
 		this.quantity = quantity;
 	}
 
-	public String getOriginalPrice() {
+	public double getOriginalPrice() {
 		return originalPrice;
 	}
 
-	public void setOriginalPrice(String originalPrice) {
+	public void setOriginalPrice(double originalPrice) {
 		this.originalPrice = originalPrice;
 	}
 
-	public String getProfit() {
+	public double getProfit() {
 		return Profit;
 	}
 
-	public void setProfit(String profit) {
+	public void setProfit(double profit) {
 		Profit = profit;
 	}
 
-	public String getSellingPrice() {
+	public double getSellingPrice() {
 		return SellingPrice;
 	}
 
-	public void setSellingPrice(String sellingPrice) {
+	public void setSellingPrice(double sellingPrice) {
 		SellingPrice = sellingPrice;
 	}
 

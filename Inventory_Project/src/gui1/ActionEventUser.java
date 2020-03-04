@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.EventObject;
 
 public class ActionEventUser extends ActionEvent {
-	
+	private int id;
 	private String name;
 	private char[] pwd;
 	private Date birthdate;
@@ -43,7 +43,15 @@ public class ActionEventUser extends ActionEvent {
 		this.gender = gender;
 	}
 	
-	int id= 1;
+	int id1= 1;
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	String command = "";
 
 	public ActionEventUser(Object source, String name, char[] pwd, Date birthdate, String gender) {

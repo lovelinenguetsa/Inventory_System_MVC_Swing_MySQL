@@ -43,7 +43,7 @@ public class SignUpDialog extends JDialog implements ActionListener {
 	private JDatePanelImpl birtdatefield;
 	private JDatePickerImpl datePicker;
 	private Controller controller;
-	private ToolBarListener strlist;
+	private ToolListener textlist;
 	private FormListener formlist;
 
 	/**
@@ -97,57 +97,56 @@ public class SignUpDialog extends JDialog implements ActionListener {
 
 	}
 
+	public void setListener(ToolListener listener) {
+		this.textlist= listener;
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == submitbtn) {
-			
-				
-			int x = 0;
-			String s1 = nameField.getText();
-			
-
-			char[] s3 = pwdField.getPassword();
-			char[] s4 = confpwdField.getPassword();
-			Date s5 =  (Date) datePicker.getModel().getValue();
-			String s7 = genderGroup.getSelection().getActionCommand();
-			
-			ActionEventUser event= new ActionEventUser(this, s1, s3, s5, new String(s7));
-
-			if (formlist != null) {
-				//formlist.formEventOccurred(event);
-			}
-
-				try {
-					controller.connect();
-//					controller.createRegisterTable();
-					controller.insertlogdata();
-					System.out.println("submit");
-//					if (controller.checkResulset()) {
-//						JOptionPane.showMessageDialog(SignUpDialog.this, "name elready exist.",
-//								"Database connection Problem", JOptionPane.ERROR_MESSAGE);
-//					} else
-//						JOptionPane.showMessageDialog(SignUpDialog.this, "Data succesfully added.","yes",
-//								JOptionPane.INFORMATION_MESSAGE);
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(SignUpDialog.this, "unable to insert Data to Database.",
-							"Database connection Problem", JOptionPane.ERROR_MESSAGE);
-					e1.printStackTrace();
-				}
-			}
-				else JOptionPane.showMessageDialog(SignUpDialog.this, "Password and confirm Password not correspond");
-				try {
-					controller.close();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 		
+		JButton clicked= (JButton) e.getSource();
 
-	if(e.getSource()==clearbtn)
+		if (clicked == submitbtn) {
+			
+				if (textlist != null) {
+					textlist.saveUserEventOccured();
+				}
+	
 
-	{
-		setVisible(false);
+				else if (clicked== clearbtn) {
+				textlist.cancelEventOccured();
+				setVisible(false);
+			}
+//
+//				try {
+//					controller.connect();
+////					controller.createRegisterTable();
+//					controller.insertlogdata();
+//					System.out.println("submit");
+////					if (controller.checkResulset()) {
+////						JOptionPane.showMessageDialog(SignUpDialog.this, "name elready exist.",
+////								"Database connection Problem", JOptionPane.ERROR_MESSAGE);
+////					} else
+////						JOptionPane.showMessageDialog(SignUpDialog.this, "Data succesfully added.","yes",
+////								JOptionPane.INFORMATION_MESSAGE);
+//				} catch (SQLException e1) {
+//					JOptionPane.showMessageDialog(SignUpDialog.this, "unable to insert Data to Database.",
+//							"Database connection Problem", JOptionPane.ERROR_MESSAGE);
+//					e1.printStackTrace();
+//				}
+//			}
+//				else JOptionPane.showMessageDialog(SignUpDialog.this, "Password and confirm Password not correspond");
+//				try {
+//					controller.close();
+//				} catch (SQLException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//		
+//
+//	if(e.getSource()==clearbtn)
+//
+//	{
+//		setVisible(false);
 	}
 	}
 

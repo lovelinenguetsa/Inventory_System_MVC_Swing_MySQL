@@ -1,5 +1,5 @@
 package gui1;
 
-public interface ProductTableListener {
+public interface ProductAndUserListener {
 	public void rowDeleted(int row);
 }

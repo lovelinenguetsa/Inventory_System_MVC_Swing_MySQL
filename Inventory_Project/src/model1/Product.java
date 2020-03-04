@@ -13,22 +13,22 @@ public class Product implements Serializable {
 	private ProductCategory productCategory ;
 	
 	private int quantity;
-	private String originalPrice;
-	private String Profit;
-	private String SellingPrice;
+	private double originalPrice;
+	private double Profit;
+	private double SellingPrice;
 	private String supplierContact;
       private SupplierCategory supCat;
 	
 	
 	
-	public Product(ProductCategory productCategory,int quantity, String originalPrice, String SellingPrice
-			, String Profit,SupplierCategory supCat,  String supplierContact)
+	public Product(ProductCategory productCategory,int quantity, double originalPrice2, double sellingPrice2
+			, double profit2,SupplierCategory supCat,  String supplierContact)
 			{
 		this.productCategory= productCategory;
 		this.quantity= quantity;
-		this.originalPrice= originalPrice;
-		this.SellingPrice= SellingPrice;
-		this.Profit= Profit;
+		this.originalPrice= originalPrice2;
+		this.SellingPrice= sellingPrice2;
+		this.Profit= profit2;
 		this.supCat= supCat;
 		this.supplierContact= supplierContact;
 		this.id= count;
@@ -39,10 +39,10 @@ public class Product implements Serializable {
 		return id+":"+productCategory;
 	}
 	
-	public Product(int id,ProductCategory productCategory,int quantity, String originalPrice, String SellingPrice
-			, String Profit,SupplierCategory supCat,  String supplierContact)
+	public Product(int id,ProductCategory productCategory,int quantity, double name1, double name2
+			, double name3,SupplierCategory supCat,  String supplierContact)
 			{
-		this(productCategory, quantity, originalPrice, SellingPrice,Profit,supCat,supplierContact);
+		this(productCategory, quantity, name1, name2,name3,supCat,supplierContact);
 		this.id= id;
 		
 	}
@@ -70,27 +70,27 @@ public class Product implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public String getOriginalPrice() {
+	public double getOriginalPrice() {
 		return originalPrice;
 	}
 
-	public void setOriginalPrice(String originalPrice) {
+	public void setOriginalPrice(double originalPrice) {
 		this.originalPrice = originalPrice;
 	}
 
-	public String getProfit() {
+	public double getProfit() {
 		return Profit;
 	}
 
-	public void setProfit(String profit) {
+	public void setProfit(double profit) {
 		Profit = profit;
 	}
 
-	public String getSellingPrice() {
+	public double getSellingPrice() {
 		return SellingPrice;
 	}
 
-	public void setSellingPrice(String sellingPrice) {
+	public void setSellingPrice(double sellingPrice) {
 		SellingPrice = sellingPrice;
 	}
 

@@ -52,7 +52,7 @@ public class FormPanel extends JPanel {
 	public FormPanel() {
 
 		Dimension dim = getPreferredSize();
-		dim.width = 260;
+		dim.width = 400;
 		setPreferredSize(dim);
 
 		okbut = new JButton("Ok");
@@ -71,7 +71,7 @@ public class FormPanel extends JPanel {
 		
 		NumberFormat format= NumberFormat.getCurrencyInstance();
 
-		quantityField = new JTextField(10);
+		quantityField = new JTextField(8);
 		
 		originPriceField = new JFormattedTextField(format);
 		profitfield = new JFormattedTextField(format);
@@ -122,20 +122,26 @@ public class FormPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				int quantity = Integer.parseInt(quantityField.getText());
 
-				String orpreis = originPriceField.getText();
-				String sellpreis = sellingPriceField.getText();
-				String profit = profitfield.getText();
-				String contact = supContactField.getText();
+				double orpreis;
+				try {
+					orpreis = format.parse(originPriceField.getText()).doubleValue();
+					double sellpreis = format.parse(sellingPriceField.getText()).doubleValue();
+					double profit = format.parse(profitfield.getText()).doubleValue();
+					String contact = supContactField.getText();
 
-				ProductCategory productCat = productList.getSelectedValue();
-				String supplierCat = (String) supplierCombo.getSelectedItem();
+					ProductCategory productCat = productList.getSelectedValue();
+					String supplierCat = (String) supplierCombo.getSelectedItem();
 
-				FormEvent event = new FormEvent(this, productCat.getId(), quantity, orpreis, profit, sellpreis,
-						supplierCat, contact);
-				if (formlist != null) {
-					formlist.formEventOccurred(event);
+					FormEvent event = new FormEvent(this, productCat.getId(), quantity, orpreis, profit, sellpreis,
+							supplierCat, contact);
+					if (formlist != null) {
+						formlist.formEventOccurred(event);
+					}
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-
+				
 			}
 		});
 

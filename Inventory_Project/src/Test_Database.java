@@ -17,12 +17,12 @@ public class Test_Database {
 			e.printStackTrace();
 		}
 	
-		db.addProduct(new Product(ProductCategory.decoration, 2, "2", "3", "1", SupplierCategory.Denver, "12345678"));
-		db.addProduct(
-				new Product(ProductCategory.location, 2, "23", "34", "12", SupplierCategory.Ml_Distributor, "123456890"));
+//		db.addProduct(new Product(ProductCategory.decoration, 2, "2", "3", "1", SupplierCategory.Denver, "12345678"));
+//		db.addProduct(
+//				new Product(ProductCategory.location, 2, "23", "34", "12", SupplierCategory.Ml_Distributor, "123456890"));
 
 		try {
-			db.save();
+			db.saveProducts();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

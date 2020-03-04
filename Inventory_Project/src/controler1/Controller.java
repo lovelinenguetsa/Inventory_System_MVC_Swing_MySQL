@@ -28,9 +28,9 @@ public class Controller {
 	public void addPerson(FormEvent ev) {
 		int ProdCatId= ev.getProductname();
 		int quantity= ev.getQuantity();
-		String originalPrice= ev.getOriginalPrice();
-		String sellingPrice= ev.getSellingPrice();
-		String profit=ev.getProfit();
+		double originalPrice= ev.getOriginalPrice();
+		double sellingPrice= ev.getSellingPrice();
+		double profit=ev.getProfit();
 		String supCat= ev.getSuppliername();
 		String supContact= ev.getSupplierContact();
 		
@@ -92,6 +92,7 @@ public class Controller {
 	
 	
 	public void addUsers(ActionEventUser e) {
+		int id= e.getId();
 		String name= e.getName();
 		char[] pwd= e.getPwd();
 		Date birthdate= e.getBirthdate();
@@ -106,7 +107,7 @@ Gender genderCat;
 			genderCat = Gender.female;
 		}
 		
-		Users user= new Users(name, pwd, birthdate, genderCat);
+		Users user= new Users(id, name, pwd, birthdate, genderCat);
 		
 		db.addUsers(user);
 	}
@@ -126,24 +127,22 @@ Gender genderCat;
 	}
 	
 	public void save() throws SQLException {
-		db.save();
+		db.saveProducts();
 	}
 	
 	public void close() throws SQLException {
 		db.disconnect();
 	}
 	
-	public boolean loadlogdata() throws SQLException {
-		return db.loadlogdata();
+	public void loadlogdata() throws SQLException {
+		 db.loadlogdata();
 	}
 	
-	public void insertlogdata() throws SQLException{
-		db.insertlogdata();
+	public void savelogdata() throws SQLException{
+		db.savelogdata();
 	}
 	
-	public void createRegisterTable() throws SQLException {
-		db.createRegisterTable();
-	}
+	
 	
 	
 }
